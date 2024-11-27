@@ -17,6 +17,9 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.subplots_adjust(left=0.3, top=0.9)  # Adjusted top margin for title
 
+    # Display playback speed at the top of the plot
+    plt.figtext(0.6, 0.91, f"Playback Speed: {playback_speed}x", ha='center', fontsize=8, weight='bold')
+
     # Load and display logos - with debug information
     logo_size = 0.03  # Adjust this value to change logo size
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -48,20 +51,20 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
     # Add background patches and conditional labels
     if labels:
         # Add background patches for counter text
-        text_backgrounds = [plt.Rectangle((-0.25, i-0.25), 0.15, 0.5, 
-                                        facecolor='white', edgecolor='none', 
-                                        transform=ax.transData,
-                                        zorder=2)
-                           for i in range(len(language_data))]
+        text_backgrounds = [plt.Rectangle((-0.3, i-0.25), 0.15, 0.5, 
+                        facecolor='white', edgecolor='none', 
+                        transform=ax.transData,
+                        zorder=2)
+                   for i in range(len(language_data))]
         for patch in text_backgrounds:
             ax.add_patch(patch)
         
-        counters = [ax.text(-0.15, i, "0", 
-                           verticalalignment='center', 
-                           horizontalalignment='right',
-                           bbox=dict(facecolor='white', edgecolor='none', pad=1),
-                           zorder=3)
-                   for i in range(len(language_data))]
+        counters = [ax.text(-0.2, i, "0", 
+                   verticalalignment='center', 
+                   horizontalalignment='right',
+                   bbox=dict(facecolor='white', edgecolor='none', pad=1),
+                   zorder=3)
+               for i in range(len(language_data))]
     else:
         text_backgrounds = []
         counters = []
