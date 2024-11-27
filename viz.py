@@ -10,18 +10,15 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
     # Calculate the maximum time based on the slowest language
     max_time = max(lang['time'] for lang in language_data)
 
-
     # Adjust animation length by playback speed
     total_duration = max_time / playback_speed
     frames = int(fps * total_duration)  # Determine frames based on playback speed and FPS
-    fig, ax = plt.subplots(figsize=(12, 8))
-    plt.subplots_adjust(left=0.3, top=0.9)  # Adjusted top margin for title
 
-    # Display playback speed at the top of the plot
+    fig, ax = plt.subplots(figsize=(12, 8))
+    plt.subplots_adjust(left=0.3, top=0.9)
     plt.figtext(0.6, 0.91, f"Playback Speed: {playback_speed}x", ha='center', fontsize=8, weight='bold')
 
-    # Load and display logos - with debug information
-    logo_size = 0.03  # Adjust this value to change logo size
+    logo_size = 0.03
     script_dir = os.path.dirname(os.path.abspath(__file__))
     logos_dir = os.path.join(script_dir, 'logos')
     
@@ -31,7 +28,6 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
         try:
             if os.path.exists(logo_path):
                 img = mpimg.imread(logo_path)
-                # Adjusted vertical position to center with bars
                 logo_ax = fig.add_axes([0.2, 0.06 + ((i + 1) / (len(language_data) + 1)) / 1.17, logo_size, logo_size])
                 logo_ax.imshow(img)
                 logo_ax.axis('off')
@@ -48,9 +44,7 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
     ax.set_yticklabels([f"{lang['name']}\n{lang['time']:.2f}s" for lang in language_data], ha='right', x=-0.02)
 
 
-    # Add background patches and conditional labels
     if labels:
-        # Add background patches for counter text
         text_backgrounds = [plt.Rectangle((-0.3, i-0.25), 0.15, 0.5, 
                         facecolor='white', edgecolor='none', 
                         transform=ax.transData,
@@ -72,7 +66,6 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
         
     balls = [ax.plot([], [], 'o', markersize=20, label=lang['name'])[0] for lang in language_data]
 
-    # Initialization function for animation
     def init():
         for ball in balls:
             ball.set_data([], [])
@@ -81,26 +74,36 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
                 counter.set_text("0")
         return balls + counters + text_backgrounds
 
-    # Update function for animation
     def update(frame):
+        # First check if this is the last frame
+        if frame >= frames - 1:
+            # Set all balls to the end position
+            for idx, ball in enumerate(balls):
+                ball.set_data([0.0], [idx])
+            # Set all counters to 1 billion
+            if labels:
+                for counter in counters:
+                    counter.set_text(f"{BILLION:,}")
+            anim.event_source.stop()
+            return balls + counters + text_backgrounds
+
+        # Regular animation frame
         for idx, (lang, ball) in enumerate(zip(language_data, balls)):
-            # Calculate progress for each language based on time taken and frame
             progress = (frame / frames) / (lang['time'] / max_time)
-            #print(progress)
             progress = min(progress * BILLION, BILLION)
-            # Simulate the "bouncing" motion
+            
             x_pos = progress - int(progress) if int(progress) % 2 == 0 else (1 - (progress - int(progress)))
-            ball.set_data([x_pos], [idx])  # x and y must be lists
+            ball.set_data([x_pos], [idx])
             
             if labels:
                 counters[idx].set_text(f"{int(progress):,}")
         
         return balls + counters + text_backgrounds
 
-    # Create the animation
-    anim = FuncAnimation(fig, update, frames=frames, init_func=init, blit=True, interval=1000 / fps)
+    anim = FuncAnimation(fig, update, frames=frames, init_func=init, blit=True, 
+                        interval=1000 / fps, repeat=False)
     plt.xlabel("One Loop")
-    # Move title to be above the chart area
+
     ax.set_title("A Billion Loops in Different Langs", pad=20)
     plt.show()
 
@@ -112,7 +115,6 @@ def main():
     
     args = parser.parse_args()
 
-    # Sample language data: Name and time taken to complete a billion loops (in seconds)
     language_data = [
         {"name": "C", "time": 0.5},
         {"name": "Rust", "time": 0.5},
