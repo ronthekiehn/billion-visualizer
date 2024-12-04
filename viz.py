@@ -23,25 +23,25 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
     logos_dir = os.path.join(script_dir, 'logos')
     
     
-    for i, lang in enumerate(language_data):
-        logo_path = os.path.join(logos_dir, f"{lang['name'].lower()}.png")
-        try:
-            if os.path.exists(logo_path):
-                img = mpimg.imread(logo_path)
-                logo_ax = fig.add_axes([0.2, 0.06 + ((i + 1) / (len(language_data) + 1)) / 1.17, logo_size, logo_size])
-                logo_ax.imshow(img)
-                logo_ax.axis('off')
-            else:
-                print(f"No logo file found for {lang['name']}")
-        except Exception as e:
-            print(f"Error loading logo for {lang['name']}: {e}")
+    # for i, lang in enumerate(language_data):
+    #     logo_path = os.path.join(logos_dir, f"{lang['name'].lower()}.png")
+    #     try:
+    #         if os.path.exists(logo_path):
+    #             img = mpimg.imread(logo_path)
+    #             logo_ax = fig.add_axes([0.2, 0.06 + ((i + 1) / (len(language_data) + 1)) / 1.17, logo_size, logo_size])
+    #             logo_ax.imshow(img)
+    #             logo_ax.axis('off')
+    #         else:
+    #             print(f"No logo file found for {lang['name']}")
+    #     except Exception as e:
+    #         print(f"Error loading logo for {lang['name']}: {e}")
 
     ax.set_xlim(0, 1)
     ax.set_xticks([0, 1])
     ax.set_ylim(-0.5, len(language_data) - 0.5)
     ax.set_yticks(range(len(language_data)))
     
-    ax.set_yticklabels([f"{lang['name']}\n{lang['time']:.2f}s" for lang in language_data], ha='right', x=-0.02)
+    ax.set_yticklabels([f"{lang['name']} {lang['time']}s" for lang in language_data], ha='right', x=-0.02)
 
 
     if labels:
@@ -64,7 +64,7 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
         counters = []
 
         
-    balls = [ax.plot([], [], 'o', markersize=20, label=lang['name'])[0] for lang in language_data]
+    balls = [ax.plot([], [], 'o', markersize=10, label=lang['name'])[0] for lang in language_data]
 
     def init():
         for ball in balls:
@@ -116,21 +116,39 @@ def main():
     args = parser.parse_args()
 
     language_data = [
-        {"name": "C", "time": 0.5},
-        {"name": "Rust", "time": 0.5},
-        {"name": "Java", "time": 0.54},
-        {"name": "Kotlin", "time": 0.56},
-        {"name": "Go", "time": 0.8},
-        {"name": "Bun", "time": 0.8},
-        {"name": "Node", "time": 1.03},
-        {"name": "Deno", "time": 1.06},
-        {"name": "Dart", "time": 1.34},
-        {"name": "PyPy", "time": 1.53},
-        {"name": "PHP", "time": 9.93},
-        {"name": "Ruby", "time": 28.8},
-        {"name": "R", "time": 73.16},
-        {"name": "Python", "time": 74.42}
-        ]
+        {"name": "R", "time": 72.643},
+        {"name": "Lua", "time": 45.941},
+        {"name": "Python", "time": 31.589},
+        {"name": "Ruby", "time": 27.919},
+        {"name": "Ruby YJIT", "time": 11.015},
+        {"name": "PHP", "time": 10.759},
+        {"name": "Elixir", "time": 2.871},
+        {"name": "Inko", "time": 2.462},
+        {"name": "PHP JIT", "time": 2.412},
+        {"name": "PyPy", "time": 2.303},
+        {"name": "Pascal", "time": 2.137},
+        {"name": "Julia", "time": 1.318},
+        {"name": "Deno", "time": 1.153},
+        {"name": "Node", "time": 1.147},
+        {"name": "Go", "time": 1.054},
+        {"name": "Bun", "time": 0.911},
+        {"name": "Lua JIT", "time": 0.8056},
+        {"name": "Scala", "time": 0.7252},
+        {"name": "C#", "time": 0.5993},
+        {"name": "Lisp", "time": 0.5739},
+        {"name": "Kotlin", "time": 0.5604},
+        {"name": "Java", "time": 0.5509},
+        {"name": "Nim", "time": 0.5458},
+        {"name": "Swift", "time": 0.5416},
+        {"name": "Crystal", "time": 0.5413},
+        {"name": "Dart", "time": 0.5295},
+        {"name": "Odin", "time": 0.5275},
+        {"name": "Fortran", "time": 0.5241},
+        {"name": "C", "time": 0.5188},
+        {"name": "Rust", "time": 0.5151},
+        {"name": "Zig", "time": 0.5105}
+    ]
+
 
     language_visualization(language_data, args.speed, args.fps, args.labels)
 
