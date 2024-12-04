@@ -53,7 +53,7 @@ def language_visualization(language_data, playback_speed, fps=60, labels=False):
         for patch in text_backgrounds:
             ax.add_patch(patch)
         
-        counters = [ax.text(-0.2, i, "0", 
+        counters = [ax.text(-0.22, i, "0", 
                    verticalalignment='center', 
                    horizontalalignment='right',
                    bbox=dict(facecolor='white', edgecolor='none', pad=1),
